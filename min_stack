@@ -1,0 +1,65 @@
+public class CustomStack {
+    private int[] stack;
+    private int[] increments;
+    private int maxSize;
+    private int currentSize;
+
+    public CustomStack(int maxSize) {
+        this.maxSize = maxSize;
+        this.stack = new int[maxSize];
+        this.increments = new int[maxSize];
+        this.currentSize = 0;
+    }
+
+    public void push(int x) {
+        if (currentSize < maxSize) {
+            stack[currentSize] = x;
+            increments[currentSize] = 0;
+            currentSize++;
+        }
+    }
+
+    public int pop() {
+        if (currentSize == 0) {
+            return -1;
+        }
+
+        int index = currentSize - 1;
+        int increment = increments[index];
+
+        if (index > 0) {
+            increments[index - 1] += increment;
+        }
+
+        int result = stack[index] + increment;
+
+        currentSize--;
+        return result;
+    }
+
+    public void increment(int k, int val) {
+        int index = Math.min(k, currentSize) - 1;
+        if (index >= 0) {
+            increments[index] += val;
+        }
+    }
+
+    public static void main(String[] args) {
+        CustomStack stk = new CustomStack(3);
+        System.out.println(stk.pop()); // Output: -1 (Stack is empty)
+
+        stk.push(1);
+        stk.push(2);
+        System.out.println(stk.pop()); // Output: 2
+
+        stk.push(2);
+        stk.push(3);
+        stk.push(4);
+        stk.increment(5, 100);
+        stk.increment(2, 100);
+        System.out.println(stk.pop()); // Output: 103
+        System.out.println(stk.pop()); // Output: 202
+        System.out.println(stk.pop()); // Output: 201
+        System.out.println(stk.pop()); // Output: -1 (Stack is empty)
+    }
+}
